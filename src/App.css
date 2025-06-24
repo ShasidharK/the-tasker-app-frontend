@@ -210,7 +210,8 @@ input[type=color]{
 }
 
 .boards-btn {
-  background: linear-gradient(90deg, #e09b2d 0%, #f7d59c 100%);
+  /* background: linear-gradient(90deg, #e09b2d 0%, #f7d59c 100%); */
+  background-color: #f7ba57;
   color: #fff;
   font-weight: 600;
   border: none;
@@ -222,8 +223,8 @@ input[type=color]{
 }
 
 .boards-btn:hover {
-  background: linear-gradient(90deg, #e09b2d 0%, #fbeee6 100%);
-  color: #e09b2d;
+  /* background: linear-gradient(90deg, #e09b2d 0%, #ffffff 100%); */
+  color: #555555;
 }
 
 .boards-error {
@@ -275,7 +276,7 @@ input[type=color]{
   color: #e09b2d;
 }
 
-.board-delete {
+.btn-svg {
   background: none;
   border: none;
   color: #999;
@@ -284,7 +285,7 @@ input[type=color]{
   transition: color 0.2s;
 }
 
-.board-delete:hover {
+.btn-svg:hover {
   color: #d32f2f;
 }
 

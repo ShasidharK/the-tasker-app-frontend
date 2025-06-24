@@ -28,7 +28,7 @@ export const createCard = createAsyncThunk("cards/createCard", async (cardData, 
 
 export const updateCard = createAsyncThunk("cards/updateCard", async ({ id, ...updates }, thunkAPI) => {
   try {
-    const response = await api.put(`${API_ENDPOINT}/${id}`, updates);
+    const response = await api.patch(`${API_ENDPOINT}/${id}`, updates);
     return response.data;
   } catch (error) {
     return thunkAPI.rejectWithValue(error.response?.data?.message || "Failed to update card");

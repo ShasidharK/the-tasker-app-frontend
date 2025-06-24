@@ -23,7 +23,7 @@ export const createBoard = createAsyncThunk("boards/createBoard", async (boardDa
 
 export const updateBoard = createAsyncThunk("boards/updateBoard", async ({ id, ...updates }, thunkAPI) => {
   try {
-    const response = await api.put(`${API_ENDPOINT}/${id}`, updates);
+    const response = await api.patch(`${API_ENDPOINT}/${id}`, updates);
     return response.data;
   } catch (error) {
     return thunkAPI.rejectWithValue(error.response?.data?.message || "Failed to update board");

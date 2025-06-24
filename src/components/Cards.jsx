@@ -1,13 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchCards, createCard, deleteCard } from "../store/cardsSlice";
+import { fetchCards, createCard, deleteCard, updateCard } from "../store/cardsSlice";
 import CardModal from "./CardModal";
+import EditIcon from "../assets/EditIcon";
+import DeleteIcon from "../assets/DeleteIcon";
+import SaveIcon from "../assets/SaveIcon";
+import CancelIcon from "../assets/CancelIcon";
 
 function Cards({ listId }) {
   const dispatch = useDispatch();
   const { items: cards, status, error } = useSelector(state => state.cards);
   const [newCard, setNewCard] = useState("");
   const [selectedCard, setSelectedCard] = useState(null);
+  const [editingCard, setEditingCard] = useState(null);
+  const [editForm, setEditForm] = useState({ title: "" });
 
   const handleCreate = (e) => {
     e.preventDefault();
@@ -15,6 +21,20 @@ function Cards({ listId }) {
       dispatch(createCard({ title: newCard, listId }));
       setNewCard("");
     }
+  };
+
+  const handleEdit = (e) => {
+    e.preventDefault();
+    if (editForm.title.trim() && editingCard) {
+      dispatch(updateCard({ id: editingCard.id, title: editForm.title }));
+      setEditingCard(null);
+    }
+  };
+
+  const startEditing = (card, e) => {
+    e.stopPropagation();
+    setEditingCard(card);
+    setEditForm({ title: card.title });
   };
 
   return (
@@ -34,8 +54,29 @@ function Cards({ listId }) {
       <div className="cards-list">
         {cards.filter(card => card.ListId === listId).map(card => (
           <div key={card.id} className="card-item">
-            <span className="card-title" onClick={() => setSelectedCard(card)}>{card.title}</span>
-            <button className="card-delete" onClick={() => dispatch(deleteCard(card.id))}>✕</button>
+            {editingCard && editingCard.id === card.id ? (
+              <form className="card-edit-form" onSubmit={handleEdit} onClick={(e) => e.stopPropagation()}>
+                <input
+                  className="card-input"
+                  type="text"
+                  placeholder="Title"
+                  value={editForm.title}
+                  onChange={e => setEditForm({...editForm, title: e.target.value})}
+                />
+                <div className="card-edit-actions" style={{display:"inline-flex"}}>
+                  <button className="card-save btn-svg" type="submit"><SaveIcon/></button>
+                  <button className="card-cancel btn-svg" onClick={(e) => {e.preventDefault(); setEditingCard(null);}}><CancelIcon/></button>
+                </div>
+              </form>
+            ) : (
+              <>
+                <span className="card-title" onClick={() => setSelectedCard(card)}>{card.title}</span>
+                <div className="card-actions" style={{display:"inline-flex"}}>
+                  <button className="btn-svg" onClick={(e) => startEditing(card, e)}><EditIcon/></button>
+                  <button className="btn-svg" onClick={() => dispatch(deleteCard(card.id))}><DeleteIcon/></button>
+                </div>
+              </>
+            )}
           </div>
         ))}
       </div>
