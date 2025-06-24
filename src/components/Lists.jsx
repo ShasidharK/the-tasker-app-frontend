@@ -15,7 +15,7 @@ function Lists({ lists, boardId }) {
             <span className="list-title">{list.title}</span>
             <button className="list-delete" onClick={() => dispatch(deleteList(list.id))}>✕</button>
           </div>
-          <Cards listId={list.id} Cards={list.Cards} />
+          <Cards listId={list.id} />
         </div>
       ))}
     </div>

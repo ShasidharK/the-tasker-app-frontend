@@ -1,13 +1,15 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import api from "../utils/axiosConfig";
+import { addChecklistsInCards } from "./checklistsSlice";
 
 const API_ENDPOINT = "/cards";
 
 export const fetchCards = createAsyncThunk("cards/fetchCards", async (listId, thunkAPI) => {
   try {
     const response = await api.get(`${API_ENDPOINT}/fetchCards?listId=${listId}`);
-    // console.log("Get cards thunk")
-    // console.log(response.data);
+    const ChecklistsArray = response.data.flatMap(card => card.Checklists);
+    // console.log(ChecklistsArray)
+    thunkAPI.dispatch(addChecklistsInCards(ChecklistsArray))
     return response.data;
   } catch (error) {
     return thunkAPI.rejectWithValue(error.response?.data?.message || "Failed to fetch cards");
@@ -51,8 +53,8 @@ const cardsSlice = createSlice({
   },
   reducers: {
     addCardsInList : (state, action) =>{
-      console.log(action.payload)
-      state.items.push(action.payload);
+      // console.log(action.payload);
+      state.items = action.payload;
     }
   },
   extraReducers: (builder) => {
@@ -63,7 +65,8 @@ const cardsSlice = createSlice({
       })
       .addCase(fetchCards.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.items = action.payload;
+        // console.log(action.payload)
+        // state.items = action.payload;
       })
       .addCase(fetchCards.rejected, (state, action) => {
         state.status = "failed";

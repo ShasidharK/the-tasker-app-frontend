@@ -13,9 +13,9 @@ function Boards({ onSelectBoard }) {
 
   const handleCreate = (e) => {
     e.preventDefault();
-    if (newBoard.title.trim() && newBoard.description.trim() && newBoard.backgroundColor.trim()) {
+    if (newBoard.title.trim()) {
       dispatch(createBoard(newBoard));
-      setNewBoard("");
+      setNewBoard({title:"", description:"", backgroundColor: ""});
     }
   };
 
@@ -26,35 +26,34 @@ function Boards({ onSelectBoard }) {
         <input
           className="boards-input"
           type="text"
-          placeholder="Board Title"
+          placeholder="Title"
           value={newBoard.title}
           onChange={e => setNewBoard({...newBoard, title: e.target.value})}
         />
-        <textarea
+         <input
           className="boards-input"
-          placeholder="Board Description"
+          type="text"
+          placeholder="Description"
           value={newBoard.description}
           onChange={e => setNewBoard({...newBoard, description: e.target.value})}
         />
-        <label htmlFor="color"> Color 
-        <input
-          name="color"
-          className="boards-input"
-          type="color"
-          value={newBoard.backgroundColor}
-          onChange={e => setNewBoard({...newBoard, backgroundColor: e.target.value})}
-          />
+        <div>
+          <label>
+            <input type="color" className="boards-input" value={newBoard.backgroundColor} onChange={e => setNewBoard({...newBoard, backgroundColor: e.target.value})}/>
+            <span>Add a background color</span>
           </label>
-        <button className="boards-btn" type="submit">Add Board</button>
+        </div>
+
+        <button className="boards-btn" type="submit">Add</button>
       </form>
       {status === "loading" && <div>Loading...</div>}
       {error && <div className="boards-error">{error}</div>}
       <div className="boards-list">
         {boards.map(board => (
-          <div key={board.id} className="board-item" style={{backgroundColor: board.backgroundColor}}>
-            <h1 onClick={() => onSelectBoard(board)} className="board-link">{board.title}</h1>
-            <p>{board.description}</p>
-            <button className="board-delete" onClick={() => dispatch(deleteBoard(board.id))}>✕</button>
+          <div key={board.id} onClick={() => onSelectBoard(board)} className="board-item">
+            <h1 className="board-link">{board.title}</h1>
+            <p className="board-description">{board.description}</p>
+            <button className="board-delete" onClick={(e) => {e.stopPropagation();dispatch(deleteBoard(board.id))}}>✕</button>
           </div>
         ))}
       </div>

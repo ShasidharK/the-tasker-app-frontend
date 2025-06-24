@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCheckitems, createCheckitem, deleteCheckitem, updateCheckitem } from "../store/checkitemsSlice";
 
-function Checkitems({ checklistId, Checkitems }) {
+function Checkitems({ checklistId }) {
   const dispatch = useDispatch();
   const { items: checkitems, status, error } = useSelector(state => state.checkitems);
   const [newItem, setNewItem] = useState("");
@@ -40,7 +40,7 @@ function Checkitems({ checklistId, Checkitems }) {
       {status === "loading" && <div>Loading items...</div>}
       {error && <div className="checkitems-error">{error}</div>}
       <ul className="checkitems-list">
-        {Checkitems.map(item => (
+        {checkitems.filter(cli => cli.ChecklistId === checklistId).map(item => (
           <li key={item.id} className="checkitem">
             <input
               type="checkbox"

@@ -3,18 +3,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchCards, createCard, deleteCard } from "../store/cardsSlice";
 import CardModal from "./CardModal";
 
-function Cards({ listId, Cards }) {
+function Cards({ listId }) {
   const dispatch = useDispatch();
   const { items: cards, status, error } = useSelector(state => state.cards);
   const [newCard, setNewCard] = useState("");
   const [selectedCard, setSelectedCard] = useState(null);
-
-  useEffect(() => {
-    if (listId) {
-      dispatch(fetchCards(listId));
-    }
-    // console.log(cards);
-  }, [dispatch, listId]);
 
   const handleCreate = (e) => {
     e.preventDefault();
@@ -39,7 +32,7 @@ function Cards({ listId, Cards }) {
       {status === "loading" && <div>Loading cards...</div>}
       {/* {error && <div className="cards-error">{error}</div>} */}
       <div className="cards-list">
-        {Cards.map(card => (
+        {cards.filter(card => card.ListId === listId).map(card => (
           <div key={card.id} className="card-item">
             <span className="card-title" onClick={() => setSelectedCard(card)}>{card.title}</span>
             <button className="card-delete" onClick={() => dispatch(deleteCard(card.id))}>✕</button>
@@ -47,7 +40,7 @@ function Cards({ listId, Cards }) {
         ))}
       </div>
       {selectedCard && (
-        <CardModal card={selectedCard} checklists={Cards.Checklists} onClose={() => setSelectedCard(null)} />
+        <CardModal listId={listId} card={selectedCard} onClose={() => setSelectedCard(null)} />
       )}
     </div>
   );

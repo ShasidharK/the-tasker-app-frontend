@@ -1,10 +1,14 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import api from "../utils/axiosConfig";
+import { addCardsInList } from "./cardsSlice";
 
 const API_ENDPOINT = "/lists";
 export const fetchLists = createAsyncThunk("lists/fetchLists", async (boardId, thunkAPI) => {
   try {
     const response = await api.get(`${API_ENDPOINT}/fetchLists?boardId=${boardId}`);
+    const CardsArray = response.data.flatMap(list => list.Cards);
+    // console.log(CardsArray)
+    thunkAPI.dispatch(addCardsInList(CardsArray))
     return response.data;
   } catch (error) {
     return thunkAPI.rejectWithValue(error.response?.data?.message || "Failed to fetch lists");

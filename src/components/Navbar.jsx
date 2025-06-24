@@ -15,8 +15,6 @@ function Navbar() {
           </Link>
         </div>
         <div className="navbar-links">
-          <Link to="/" className="navbar-link">Dashboard</Link>
-          <Link to="/about" className="navbar-link">About</Link>
           {user ? (
             <button className="navbar-link" onClick={() => dispatch(logout())}>Logout</button>
           ) : (

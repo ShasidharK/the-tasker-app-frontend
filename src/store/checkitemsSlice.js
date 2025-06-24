@@ -23,7 +23,7 @@ export const createCheckitem = createAsyncThunk("checkitems/createCheckitem", as
 
 export const updateCheckitem = createAsyncThunk("checkitems/updateCheckitem", async ({ id, ...updates }, thunkAPI) => {
   try {
-    const response = await api.put(`${API_ENDPOINT}/${id}`, updates);
+    const response = await api.patch(`${API_ENDPOINT}/${id}`, updates);
     return response.data;
   } catch (error) {
     return thunkAPI.rejectWithValue(error.response?.data?.message || "Failed to update checkitem");
@@ -46,7 +46,12 @@ const checkitemsSlice = createSlice({
     status: "idle",
     error: null
   },
-  reducers: {},
+  reducers: {
+    addCheckitemsInChecklists : (state, action) =>{
+      // console.log(action.payload);
+      state.items = action.payload;
+    }
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchCheckitems.pending, (state) => {
@@ -55,7 +60,7 @@ const checkitemsSlice = createSlice({
       })
       .addCase(fetchCheckitems.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.items = action.payload;
+        // state.items = action.payload;
       })
       .addCase(fetchCheckitems.rejected, (state, action) => {
         state.status = "failed";
@@ -74,4 +79,5 @@ const checkitemsSlice = createSlice({
   }
 });
 
+export const {addCheckitemsInChecklists} = checkitemsSlice.actions;
 export default checkitemsSlice.reducer;

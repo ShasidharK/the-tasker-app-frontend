@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { fetchChecklists, createChecklist, deleteChecklist } from "../store/checklistsSlice";
 import Checklists from "./Checklists";
+import { fetchCards } from "../store/cardsSlice";
 
-function CardModal({ card, onClose }) {
+function CardModal({ listId, card, onClose }) {
   const dispatch = useDispatch();
-  const { items:checklists, status, error } = useSelector(state => state.checklists);
   const [newChecklist, setNewChecklist] = useState("");
 
   useEffect(() => {
@@ -13,6 +13,13 @@ function CardModal({ card, onClose }) {
       dispatch(fetchChecklists(card.id));
     }
   }, [dispatch, card]);
+
+  useEffect(() => {
+    if (listId) {
+      dispatch(fetchCards(listId));
+    }
+    // console.log(cards);
+  }, [dispatch, listId]);
 
   const handleCreate = (e) => {
     e.preventDefault();
@@ -39,9 +46,7 @@ function CardModal({ card, onClose }) {
           />
           <button className="modal-btn" type="submit">Add Checklist</button>
         </form>
-        {status === "loading" && <div>Loading checklists...</div>}
-        {error && <div className="modal-error">{error}</div>}
-        <Checklists checklists={checklists} cardId={card.id} />
+        <Checklists cardId={card.id} />
       </div>
     </div>
   );

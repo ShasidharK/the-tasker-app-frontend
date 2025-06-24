@@ -1,13 +1,16 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import {useDispatch} from "react-redux";
 import api from "../utils/axiosConfig";
+import { addCheckitemsInChecklists } from "./checkitemsSlice";
 
 const API_ENDPOINT = "/checklists";
 
 export const fetchChecklists = createAsyncThunk("checklists/fetchChecklists", async (cardId, thunkAPI) => {
   try {
     const response = await api.get(`${API_ENDPOINT}/fetchChecklists?cardId=${cardId}`);
-    // useDispatch(checklistsSlice.reducer)
+    // console.log(response.data);
+    const CheckitemsArray = response.data.flatMap(checklist => checklist.ChecklistItems);
+    // console.log(CheckitemsArray)
+    thunkAPI.dispatch(addCheckitemsInChecklists(CheckitemsArray))
     return response.data;
   } catch (error) {
     return thunkAPI.rejectWithValue(error.response?.data?.message || "Failed to fetch checklists");
@@ -48,7 +51,12 @@ const checklistsSlice = createSlice({
     status: "idle",
     error: null
   },
-  reducers: {},
+  reducers: {
+    addChecklistsInCards : (state, action) =>{
+      // console.log(action.payload);
+      state.items = action.payload;
+    }
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchChecklists.pending, (state) => {
@@ -57,7 +65,7 @@ const checklistsSlice = createSlice({
       })
       .addCase(fetchChecklists.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.items = action.payload;
+        // state.items = action.payload;
       })
       .addCase(fetchChecklists.rejected, (state, action) => {
         state.status = "failed";
@@ -76,4 +84,5 @@ const checklistsSlice = createSlice({
   }
 });
 
+export const {addChecklistsInCards} = checklistsSlice.actions;
 export default checklistsSlice.reducer;
