@@ -56,7 +56,7 @@ function Login() {
           {status === "loading" ? "Signing in..." : "Sign In"}
         </button>
         <div className="auth-footer">
-          Don't have an account? <a href="/register">Register</a>
+          Don't have an account? <Link to="/register">Register</Link>
         </div>
       </form>
     </div>
