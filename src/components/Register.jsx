@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { register } from "../store/authSlice";
 
 function Register() {
@@ -85,7 +85,7 @@ function Register() {
           {status === "loading" ? "Registering..." : "Register"}
         </button>
         <div className="auth-footer">
-          Already have an account? <a href="/login">Sign In</a>
+          Already have an account? <Link to="/login">Login</Link>
         </div>
       </form>
     </div>
